@@ -25,16 +25,16 @@ Some of the checklists in this doc are for **C4 (🐺)** and some of them are fo
 
 Under "SPONSORS ADD INFO HERE" heading below, include the following:
 
-- [ ] Name of each contract and:
-  - [ ] lines of code in each
-  - [ ] external contracts called in each
-  - [ ] libraries used in each
-- [ ] Describe any novel or unique curve logic or mathematical models implemented in the contracts
-- [ ] Does the token conform to the ERC-20 standard? In what specific ways does it differ?
-- [ ] Describe anything else that adds any special logic that makes your approach unique
-- [ ] Identify any areas of specific concern in reviewing the code
-- [ ] Add all of the code to this repo that you want reviewed
-- [ ] Create a PR to this repo with the above changes.
+- [x] Name of each contract and:
+  - [x] lines of code in each
+  - [x] external contracts called in each
+  - [x] libraries used in each
+- [x] Describe any novel or unique curve logic or mathematical models implemented in the contracts
+- [x] Does the token conform to the ERC-20 standard? In what specific ways does it differ?
+- [x] Describe anything else that adds any special logic that makes your approach unique
+- [x] Identify any areas of specific concern in reviewing the code
+- [x] Add all of the code to this repo that you want reviewed
+- [x] Create a PR to this repo with the above changes.
 
 ---
 
@@ -86,4 +86,58 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 
 This repo will be made public before the start of the contest. (C4 delete this line when made public)
 
-[ ⭐️ SPONSORS ADD INFO HERE ]
+# Introduction
+
+Swivel is a yield tokenization protocol that allows LP's, stakers and lenders to separate their yield into two components, zcTokens (which represent the 1-1 claim to deposited tokens upon maturity), and nTokens (which represent the claim to any yield generated). In addition to this base functionality, Swivel provides the infrastructure to facilitate the exchange of these tokens through an orderbook. This allows users to lend with low or no slippage, and liquidity providers to avoid the alpha decay inherent to LPing in derivative markets on an AMM.
+
+A testnet is currently live at https://swivel.exchange .
+
+Regarding our orderbook infrastructure, the base orderbook functionality is most similar to the original 0x-v3. Users EIP-712 sign an order object which contains information regarding asset, maturity, maker, price, amount, and whether the user is initiating a new position vs exiting/selling a currently held zcToken or nToken position.
+
+### **Order Path:**
+A taker initiates their own position using `initiate` or `exit` on Swivel.sol, in the process filling another user's order. Swivel.sol handles fund custody and deposits/withdrawals from underlying protocols (compound). Params are routed to Marketplace.sol and according to the `underlying` and `maturity` of an order, a market is identified (asset-maturity combination), and zcTokens and nTokens are minted/burnt/exchanged within that market according to the params.
+
+Order fill amounts and cancellations are tracked on chain based on a keccak of the order itself.
+
+### **nToken and zcToken functionality:**
+When a user initiates a new fixed-yield position on our orderbook, or manually calls `splitUnderlying`, an underlying token is split into zcTokens and nTokens. (the fixed-yield comes from immediately selling nTokens).
+
+A zcToken (standard erc-20 + erc-2612) can be redeemed 1-1 for underlying upon maturity. After maturity, if a user has not redeemed their zcTokens, they begin accruing interest from the deposit in compound. 
+
+An nToken (non-standard contract balance) is a balance within a users `vault`(vault.notional) within VaultTracker.sol. nTokens (notional balance) represent a deposit in an underlying protocol (compound), and accrue the interest from this deposit until maturity. This interest can be redeemed at any time.
+
+
+# Smart Contracts 
+| **Contracts**    | **Link** | **LOC** | **LIBS** |
+|--------------|------|------|------|
+| Swivel       |[Link](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Swivel.sol)| 405 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Abstracts.sol), [Hash.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Hash.sol), [Sig.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Sig.sol) |
+| Marketplace  |[Link](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/MarketPlace.sol)| 262 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/Abstracts.sol) |
+| VaultTracker |[Link](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/VaultTracker.sol)| 248 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/Abstracts.sol) |
+
+## **Swivel:**
+Swivel.sol handles all fund custody, and most all user interaction methods are on Swivel.sol (`initiate`,`exit`,`splitUnderying`,`combineTokens`, `redeemZcTokens`, `redeemVaultInterest`). We categorize all order interactions as either `payingPremium` or `receivingPremium` depending on the params (`vault` & `exit`) of an order filled, and whether a user calls `initiate` or `exit`. 
+
+For example, if `vault` = true, the maker of an order is interacting with their vault, and if `exit` = true, they are selling notional (nTokens) and would be `receivingPremium`. Alternatively, if `vault` = false, and `exit` = false, the maker is initiating a fixed yield, and thus also splitting underlying and selling nTokens, `receivingPremium`. 
+
+Outside of this sorting, the basic order interaction logic is:
+1. Check Signatures, Cancellations, Fill amounts for order validity
+2. Calculate either principalFilled or premiumFilled depending on whether the order is paying/receivingPremium
+3. Calculate fee
+4. Deposit/Withdraw from compound and/or exchange/mint/burn zcTokens and nTokens through marketplace.sol
+5. Transfer fees
+
+Other methods (`splitUnderying`,`combineTokens`, `redeemZcTokens`, `redeemVaultInterest`) largely just handle fund custody from underlying protocols, and shoot burn/mint commands to marketplace.sol.
+
+## **Marketplace:**
+Marketplace.sol acts as the central hub for tracking all markets (defined as an asset-matury pair). Markets are stored in a mapping and admins are the only ones that can create markets.
+
+Any orderbook interactions that require zcToken or nToken transfers are handled through marketplace burn/mints in order to avoid requiring approvals.
+
+If a user wants to transfer nTokens are without using our orderbook, they do so directly through the marketplace.sol contract.
+
+## **VaultTracker:**
+A user's vault has three properties, `notional` (nToken balance), `redeemable` (underlying accrued to redeem), and `exchangeRate` (compound exchangeRate of last vault interaction).
+
+When a user takes on a floating position and purchases nTokens (vault initiate), they increase the notional balance of their vault (`vault.notional`). Opposingly, if they sell nTokens, they clearly decrease the notional balance of their vault.
+
+Every time a user either increases/decreases their nToken balance (`vault.notional`), the marginal interest since the user's last vault interaction is calculated + added to `vault.redeemable`, and a new `vault.exchangeRate` is set.
