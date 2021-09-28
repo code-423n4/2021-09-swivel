@@ -34,7 +34,7 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 - [x] Describe anything else that adds any special logic that makes your approach unique
 - [x] Identify any areas of specific concern in reviewing the code
 - [x] Add all of the code to this repo that you want reviewed
-- [x] Create a PR to this repo with the above changes.
+- [ ] Create a PR to this repo with the above changes.
 
 ---
 
@@ -108,9 +108,9 @@ An nToken (non-standard contract balance) is a balance within a users `vault`(va
 
 
 # Smart Contracts 
-| **Contracts**    | **Link** | **LOC** | **LIBS** |
-|--------------|------|------|------|
-| Swivel       |[Link](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Swivel.sol)| 405 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Abstracts.sol), [Hash.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Hash.sol), [Sig.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Sig.sol) |
+| **Contracts**    | **Link** | **LOC** | **LIBS** | **External** |
+|--------------|------|------|------|------|
+| Swivel       |[Link](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Swivel.sol)| 405 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Abstracts.sol), [Hash.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Hash.sol), [Sig.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Sig.sol) | [CToken.sol](https://github.com/compound-finance/compound-protocol/blob/master/contracts/CToken.sol) |
 | Marketplace  |[Link](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/MarketPlace.sol)| 262 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/Abstracts.sol) |
 | VaultTracker |[Link](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/VaultTracker.sol)| 248 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/Abstracts.sol) |
 
@@ -120,7 +120,7 @@ Swivel.sol handles all fund custody, and most all user interaction methods are o
 For example, if `vault` = true, the maker of an order is interacting with their vault, and if `exit` = true, they are selling notional (nTokens) and would be `receivingPremium`. Alternatively, if `vault` = false, and `exit` = false, the maker is initiating a fixed yield, and thus also splitting underlying and selling nTokens, `receivingPremium`. 
 
 Outside of this sorting, the basic order interaction logic is:
-1. Check Signatures, Cancellations, Fill amounts for order validity
+1. Check Signatures, Cancellations, Fill availability for order validity
 2. Calculate either principalFilled or premiumFilled depending on whether the order is paying/receivingPremium
 3. Calculate fee
 4. Deposit/Withdraw from compound and/or exchange/mint/burn zcTokens and nTokens through marketplace.sol
