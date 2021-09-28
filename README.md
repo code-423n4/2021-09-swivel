@@ -112,7 +112,7 @@ An nToken (non-standard contract balance) is a balance within a users `vault`(va
 |--------------|------|------|------|------|
 | Swivel       |[Link](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Swivel.sol)| 405 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Abstracts.sol), [Hash.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Hash.sol), [Sig.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Sig.sol) | [CToken.sol](https://github.com/compound-finance/compound-protocol/blob/master/contracts/CToken.sol) |
 | Marketplace  |[Link](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/MarketPlace.sol)| 262 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/Abstracts.sol) |
-| VaultTracker |[Link](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/VaultTracker.sol)| 248 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/Abstracts.sol) |
+| VaultTracker |[Link](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/VaultTracker.sol)| 248 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/Abstracts.sol) | [CToken.sol](https://github.com/compound-finance/compound-protocol/blob/master/contracts/CToken.sol) |
 
 ## **Swivel:**
 Swivel.sol handles all fund custody, and most all user interaction methods are on Swivel.sol (`initiate`,`exit`,`splitUnderying`,`combineTokens`, `redeemZcTokens`, `redeemVaultInterest`). We categorize all order interactions as either `payingPremium` or `receivingPremium` depending on the params (`vault` & `exit`) of an order filled, and whether a user calls `initiate` or `exit`. 
