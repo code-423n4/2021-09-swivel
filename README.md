@@ -90,12 +90,15 @@ This repo will be made public before the start of the contest. (C4 delete this l
 
 Swivel is a yield tokenization protocol that allows LP's, stakers and lenders to separate their yield into two components, zcTokens (which represent the 1-1 claim to deposited tokens upon maturity), and nTokens (which represent the claim to any yield generated). In addition to this base functionality, Swivel provides the infrastructure to facilitate the exchange of these tokens through an orderbook. This allows users to lend with low or no slippage, and liquidity providers to avoid the alpha decay inherent to LPing in derivative markets on an AMM.
 
-A testnet is currently live at https://swivel.exchange .
-General project docs can be found at https://docs.swivel.finance .
-Contract docs can be found at https://docs.swivel.finance/developers/contract .
-A recent video overview (ETHOnline): https://www.youtube.com/watch?v=hI0Uwd4Xayg .
-
 Regarding our orderbook infrastructure, the base orderbook functionality is most similar to the original 0x-v3. Users EIP-712 sign an order object which contains information regarding asset, maturity, maker, price, amount, and whether the user is initiating a new position vs exiting/selling a currently held zcToken or nToken position.
+
+A testnet is currently live at https://swivel.exchange .
+
+General Project Docs:https://docs.swivel.finance
+
+Contract Docs: https://docs.swivel.finance/developers/contract 
+
+Recent Video Overview (ETHOnline): https://www.youtube.com/watch?v=hI0Uwd4Xayg .
 
 ### **Order Path:**
 A taker initiates their own position using `initiate` or `exit` on Swivel.sol, in the process filling another user's order. Swivel.sol handles fund custody and deposits/withdrawals from underlying protocols (compound). Params are routed to Marketplace.sol and according to the `underlying` and `maturity` of an order, a market is identified (asset-maturity combination), and zcTokens and nTokens are minted/burnt/exchanged within that market according to the params.
