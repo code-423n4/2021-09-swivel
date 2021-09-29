@@ -39,9 +39,9 @@ An nToken (non-standard contract balance) is a balance within a users `vault`(va
 # Smart Contracts 
 | **Contracts**    | **Link** | **LOC** | **LIBS** | **External** |
 |--------------|------|------|------|------|
-| Swivel       |[Link](https://github.com/Swivel-Finance/gost/blob/v2/test/swivel/Swivel.sol)| 405 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/swivel/Abstracts.sol), [Hash.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/swivel/Hash.sol), [Sig.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/swivel/Sig.sol) | [CToken.sol](https://github.com/compound-finance/compound-protocol/blob/master/contracts/CToken.sol) |
-| Marketplace  |[Link](https://github.com/Swivel-Finance/gost/blob/v2/test/marketplace/MarketPlace.sol)| 262 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/marketplace/Abstracts.sol) |
-| VaultTracker |[Link](https://github.com/Swivel-Finance/gost/blob/v2/test/vaulttracker/VaultTracker.sol)| 248 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/vaulttracker/Abstracts.sol) | [CToken.sol](https://github.com/compound-finance/compound-protocol/blob/master/contracts/CToken.sol) |
+| Swivel       |[Link](https://github.com/Swivel-Finance/gost/blob/v2/test/swivel/Swivel.sol)| 486 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/swivel/Abstracts.sol), [Hash.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/swivel/Hash.sol), [Sig.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/swivel/Sig.sol) | [CToken.sol](https://github.com/compound-finance/compound-protocol/blob/master/contracts/CToken.sol) |
+| Marketplace  |[Link](https://github.com/Swivel-Finance/gost/blob/v2/test/marketplace/MarketPlace.sol)| 259 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/marketplace/Abstracts.sol) |
+| VaultTracker |[Link](https://github.com/Swivel-Finance/gost/blob/v2/test/vaulttracker/VaultTracker.sol)| 251 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/vaulttracker/Abstracts.sol) | [CToken.sol](https://github.com/compound-finance/compound-protocol/blob/master/contracts/CToken.sol) |
 
 ## **Swivel:**
 Swivel.sol handles all fund custody, and most all user interaction methods are on Swivel.sol (`initiate`,`exit`,`splitUnderying`,`combineTokens`, `redeemZcTokens`, `redeemVaultInterest`). We categorize all order interactions as either `payingPremium` or `receivingPremium` depending on the params (`vault` & `exit`) of an order filled, and whether a user calls `initiate` or `exit`. 
@@ -70,3 +70,12 @@ A user's vault has three properties, `notional` (nToken balance), `redeemable` (
 When a user takes on a floating position and purchases nTokens (vault initiate), they increase the notional balance of their vault (`vault.notional`). Opposingly, if they sell nTokens, this balance decreases.
 
 Every time a user either increases/decreases their nToken balance (`vault.notional`), the marginal interest since the user's last vault interaction is calculated + added to `vault.redeemable`, and a new `vault.exchangeRate` is set.
+
+
+# Areas of Concern:
+There are a few primary targets for concern:
+1. Ensuring no vulnerabilities in order validity and the use of an order's hash to track cancel status and fill amount.
+2. Ensuring the accurate calculation of deposit interest. This includes VaultTracker.sol + the calculation of marginal interest between vault interactions pre-maturity, and Marketplace.sol + the calculation of zcToken interest post-maturity.
+3. Ensuring maturity is handled properly.
+
+One additional small area of concern that isn't necessarily defined in the scope above but may be rewarded could be in the ERC-2612 chain imported as zcToken.sol in Marketplace.sol
