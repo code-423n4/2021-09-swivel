@@ -40,13 +40,13 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 
 # ⭐️ Sponsor: Provide marketing details
 
-- [ ] Your logo (URL or add file to this repo - SVG or other vector format preferred)
-- [ ] Your primary Twitter handle
-- [ ] Any other Twitter handles we can/should tag in (e.g. organizers' personal accounts, etc.)
-- [ ] Your Discord URI
-- [ ] Your website
-- [ ] Optional: Do you have any quirks, recurring themes, iconic tweets, community "secret handshake" stuff we could work in? How do your people recognize each other, for example? 
-- [ ] Optional: your logo in Discord emoji format
+- [x] Your logo (URL or add file to this repo - SVG or other vector format preferred)
+- [x] Your primary Twitter handle
+- [x] Any other Twitter handles we can/should tag in (e.g. organizers' personal accounts, etc.)
+- [x] Your Discord URI
+- [x] Your website
+- [x] Optional: Do you have any quirks, recurring themes, iconic tweets, community "secret handshake" stuff we could work in? How do your people recognize each other, for example? 
+- [x] Optional: your logo in Discord emoji format
 
 ---
 
@@ -64,13 +64,13 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 
 ## ⭐️ Sponsor: Contest prep
 - [ ] Make sure your code is thoroughly commented using the [NatSpec format](https://docs.soliditylang.org/en/v0.5.10/natspec-format.html#natspec-format).
-- [ ] Modify the bottom of this `README.md` file to describe how your code is supposed to work with links to any relevent documentation and any other criteria/details that the C4 Wardens should keep in mind when reviewing. ([Here's a well-constructed example.](https://github.com/code-423n4/2021-06-gro/blob/main/README.md))
+- [x] Modify the bottom of this `README.md` file to describe how your code is supposed to work with links to any relevent documentation and any other criteria/details that the C4 Wardens should keep in mind when reviewing. ([Here's a well-constructed example.](https://github.com/code-423n4/2021-06-gro/blob/main/README.md))
 - [ ] Please have final versions of contracts and documentation added/updated in this repo **no less than 8 hours prior to contest start time.**
-- [ ] Ensure that you have access to the _findings_ repo where issues will be submitted.
+- [x] Ensure that you have access to the _findings_ repo where issues will be submitted.
 - [ ] Promote the contest on Twitter (optional: tag in relevant protocols, etc.)
 - [ ] Share it with your own communities (blog, Discord, Telegram, email newsletters, etc.)
-- [ ] Optional: pre-record a high-level overview of your protocol (not just specific smart contract functions). This saves wardens a lot of time wading through documentation.
-- [ ] Designate someone (or a team of people) to monitor DMs & questions in the C4 Discord (**#questions** channel) daily (Note: please *don't* discuss issues submitted by wardens in an open channel, as this could give hints to other wardens.)
+- [x] Optional: pre-record a high-level overview of your protocol (not just specific smart contract functions). This saves wardens a lot of time wading through documentation.
+- [x] Designate someone (or a team of people) to monitor DMs & questions in the C4 Discord (**#questions** channel) daily (Note: please *don't* discuss issues submitted by wardens in an open channel, as this could give hints to other wardens.)
 - [ ] Delete this checklist and all text above the line below when you're ready.
 
 ---
@@ -91,6 +91,9 @@ This repo will be made public before the start of the contest. (C4 delete this l
 Swivel is a yield tokenization protocol that allows LP's, stakers and lenders to separate their yield into two components, zcTokens (which represent the 1-1 claim to deposited tokens upon maturity), and nTokens (which represent the claim to any yield generated). In addition to this base functionality, Swivel provides the infrastructure to facilitate the exchange of these tokens through an orderbook. This allows users to lend with low or no slippage, and liquidity providers to avoid the alpha decay inherent to LPing in derivative markets on an AMM.
 
 A testnet is currently live at https://swivel.exchange .
+General project docs can be found at https://docs.swivel.finance .
+Contract docs can be found at https://docs.swivel.finance/developers/contract .
+A recent video overview (ETHOnline): https://www.youtube.com/watch?v=hI0Uwd4Xayg .
 
 Regarding our orderbook infrastructure, the base orderbook functionality is most similar to the original 0x-v3. Users EIP-712 sign an order object which contains information regarding asset, maturity, maker, price, amount, and whether the user is initiating a new position vs exiting/selling a currently held zcToken or nToken position.
 
@@ -110,9 +113,9 @@ An nToken (non-standard contract balance) is a balance within a users `vault`(va
 # Smart Contracts 
 | **Contracts**    | **Link** | **LOC** | **LIBS** | **External** |
 |--------------|------|------|------|------|
-| Swivel       |[Link](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Swivel.sol)| 405 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Abstracts.sol), [Hash.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Hash.sol), [Sig.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/swivel/Sig.sol) | [CToken.sol](https://github.com/compound-finance/compound-protocol/blob/master/contracts/CToken.sol) |
-| Marketplace  |[Link](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/MarketPlace.sol)| 262 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/Abstracts.sol) |
-| VaultTracker |[Link](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/VaultTracker.sol)| 248 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/build/marketplace/Abstracts.sol) | [CToken.sol](https://github.com/compound-finance/compound-protocol/blob/master/contracts/CToken.sol) |
+| Swivel       |[Link](https://github.com/Swivel-Finance/gost/blob/v2/test/swivel/Swivel.sol)| 405 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/swivel/Abstracts.sol), [Hash.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/swivel/Hash.sol), [Sig.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/swivel/Sig.sol) | [CToken.sol](https://github.com/compound-finance/compound-protocol/blob/master/contracts/CToken.sol) |
+| Marketplace  |[Link](https://github.com/Swivel-Finance/gost/blob/v2/test/marketplace/MarketPlace.sol)| 262 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/marketplace/Abstracts.sol) |
+| VaultTracker |[Link](https://github.com/Swivel-Finance/gost/blob/v2/test/vaulttracker/VaultTracker.sol)| 248 | [Abstracts.sol](https://github.com/Swivel-Finance/gost/blob/v2/test/vaulttracker/Abstracts.sol) | [CToken.sol](https://github.com/compound-finance/compound-protocol/blob/master/contracts/CToken.sol) |
 
 ## **Swivel:**
 Swivel.sol handles all fund custody, and most all user interaction methods are on Swivel.sol (`initiate`,`exit`,`splitUnderying`,`combineTokens`, `redeemZcTokens`, `redeemVaultInterest`). We categorize all order interactions as either `payingPremium` or `receivingPremium` depending on the params (`vault` & `exit`) of an order filled, and whether a user calls `initiate` or `exit`. 
