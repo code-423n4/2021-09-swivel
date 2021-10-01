@@ -46,6 +46,9 @@ Swivel.sol handles all fund custody, and most all user interaction methods are o
 
 For example, if `vault` = true, the maker of an order is interacting with their vault, and if `exit` = true, they are selling notional (nTokens) and would be `receivingPremium`. Alternatively, if `vault` = false, and `exit` = false, the maker is initiating a fixed yield, and thus also splitting underlying and selling nTokens, `receivingPremium`. 
 
+A warden, @ItsmeSTYJ was kind enough to organize a matrix which might help understand the potential interactions: ![image](https://user-images.githubusercontent.com/62613746/135630667-8d63ccc5-1a04-458d-abf2-1a3c507fa5c2.png)
+
+
 Outside of this sorting, the basic order interaction logic is:
 1. Check Signatures, Cancellations, Fill availability for order validity
 2. Calculate either principalFilled or premiumFilled depending on whether the order is paying/receivingPremium
